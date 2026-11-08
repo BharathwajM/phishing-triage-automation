@@ -1,5 +1,7 @@
 # Phishing Triage Automation
 
+[![Tests](https://github.com/BharathwajM/phishing-triage-automation/actions/workflows/tests.yml/badge.svg)](https://github.com/BharathwajM/phishing-triage-automation/actions/workflows/tests.yml)
+
 A command-line tool that does a SOC analyst's **first-pass triage of a suspicious email** automatically. Point it at a `.eml` file and it parses the headers, extracts reported sender authentication results, hunts for the tells of a phish, scores the risk, maps the findings to MITRE ATT&CK, and writes an analyst-ready report with a verdict and recommended actions.
 
 Triaging reported phishing is one of the highest-volume jobs in a SOC. This tool does the repetitive part — extract, analyse, score, document — so the analyst spends their time on the judgement call, not the copy-paste.
