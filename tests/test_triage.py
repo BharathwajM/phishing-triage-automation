@@ -1,5 +1,5 @@
 """End-to-end checks: the sample phishing emails must be caught and the
-legitimate controls must not be flagged. Run with:  python -m unittest -v
+legitimate controls must not be flagged. Run with: python -m unittest discover -s tests -v
 Pure standard library - no pytest needed."""
 import pathlib
 import sys
@@ -8,8 +8,10 @@ import unittest
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parents[1]))
 
 from phishtriage.auth import analyze_auth
+from phishtriage.enrich import Enrichment
 from phishtriage.indicators import collect_indicators
 from phishtriage.parser import parse_email
+from phishtriage.report import build_html, build_markdown
 from phishtriage.scoring import score
 from phishtriage.utils import registered_domain
 
@@ -25,12 +27,14 @@ def verdict_for(name: str):
 class TestVerdicts(unittest.TestCase):
     def test_phishing_samples_flagged(self):
         for name in ("paypal_credphish.eml", "microsoft365_password.eml",
-                     "invoice_macro.eml", "ato_refund_scam.eml"):
+                     "ato_refund_scam.eml"):
             with self.subTest(sample=name):
                 self.assertEqual(verdict_for(name).label, "MALICIOUS")
 
     def test_borderline_is_suspicious(self):
-        self.assertEqual(verdict_for("parcel_reschedule.eml").label, "SUSPICIOUS")
+        for name in ("parcel_reschedule.eml", "invoice_macro.eml"):
+            with self.subTest(sample=name):
+                self.assertEqual(verdict_for(name).label, "SUSPICIOUS")
 
     def test_legitimate_controls_not_flagged(self):
         for name in ("legit_github_notification.eml", "legit_internal_hr.eml"):
@@ -54,6 +58,51 @@ class TestDetectors(unittest.TestCase):
     def test_macro_attachment_detected(self):
         v = verdict_for("invoice_macro.eml")
         self.assertIn("ATT_MACRO", {i.id for i in v.indicators})
+
+
+class TestUntrustedReports(unittest.TestCase):
+    def test_authentication_claims_are_unverified_and_do_not_change_score(self):
+        for result in ("pass", "fail"):
+            with self.subTest(result=result):
+                message = (
+                    "From: test@example.invalid\n"
+                    f"Authentication-Results: untrusted.invalid; spf={result} "
+                    f"dkim={result} dmarc={result}\n"
+                    "Subject: Test\n\nTest"
+                )
+                pe = parse_email(message.encode())
+                auth = analyze_auth(pe)
+                verdict = score(collect_indicators(pe, auth))
+                enr = Enrichment(enabled=False, skipped_reason="Disabled for tests.")
+                self.assertEqual((auth.spf, auth.dkim, auth.dmarc), (result,) * 3)
+                self.assertEqual(verdict.score, 0)
+                for report in (build_markdown(pe, auth, verdict, enr),
+                               build_html(pe, auth, verdict, enr)):
+                    self.assertIn("Reported results are unverified", report)
+                    self.assertIn(result, report)
+
+    def test_report_displays_email_markup_as_literal_text(self):
+        subject = '` `` ![pixel](https://example.invalid/pixel) <img src="x">'
+        filename = '` ![track](https://example.invalid/track) | invoice.xlsm'
+        message = (
+            "From: test@example.invalid\n"
+            f"Subject: {subject}\n"
+            "MIME-Version: 1.0\n"
+            "Content-Type: application/octet-stream\n"
+            f'Content-Disposition: attachment; filename="{filename}"\n\n'
+            "Synthetic attachment"
+        )
+        pe = parse_email(message.encode())
+        auth = analyze_auth(pe)
+        verdict = score(collect_indicators(pe, auth))
+        enr = Enrichment(enabled=False, skipped_reason="Disabled for tests.")
+        markdown = build_markdown(pe, auth, verdict, enr)
+        self.assertIn(f"- **Subject:** ``` {subject} ```\n", markdown)
+        self.assertIn(f"- **Attachment:** `` {filename} ``", markdown)
+        self.assertIn(r"\x7c invoice.xlsm", markdown)
+        html = build_html(pe, auth, verdict, enr)
+        self.assertIn("&lt;img", html)
+        self.assertNotIn("<img", html)
 
 
 if __name__ == "__main__":

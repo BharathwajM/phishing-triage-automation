@@ -1,6 +1,8 @@
-"""Parse sender-authentication results (SPF / DKIM / DMARC) from the headers
-a receiving mail server stamps on. These are the first thing a SOC analyst
-reads on a suspicious email: did it really come from where it claims?"""
+"""Extract authentication claims from an .eml without trusting its headers.
+
+A raw message alone cannot establish who inserted an authentication result.
+The reports show those claims for an analyst to check against gateway logs.
+"""
 from __future__ import annotations
 
 import re
@@ -16,11 +18,6 @@ _RESULT_RE = {
     "dmarc": re.compile(r"\bdmarc=(\w+)", re.IGNORECASE),
 }
 
-# How each mechanism's result maps to concern. "pass" is good; everything
-# else ranges from unknown to outright failure.
-_BAD = {"fail", "softfail", "permerror", "temperror", "none", "neutral"}
-
-
 @dataclass
 class AuthResult:
     spf: str
@@ -28,13 +25,6 @@ class AuthResult:
     dmarc: str
     from_domain: str
     notes: list[str]
-
-    def failing(self) -> list[str]:
-        out = []
-        for name, val in (("SPF", self.spf), ("DKIM", self.dkim), ("DMARC", self.dmarc)):
-            if val and val.lower() in _BAD:
-                out.append(f"{name}={val}")
-        return out
 
 
 def analyze_auth(pe: ParsedEmail) -> AuthResult:
@@ -45,14 +35,11 @@ def analyze_auth(pe: ParsedEmail) -> AuthResult:
         results[mech] = (m.group(1).lower() if m else "")
 
     notes: list[str] = []
-    if not blob.strip():
-        notes.append("No Authentication-Results header present - cannot confirm sender authenticity.")
-
-    # DMARC alignment: the visible From domain should align with the authenticated domain.
+    # Compare visible header domains separately from the reported authentication claims.
     from_dom = registered_domain(pe.domain_of(pe.from_addr))
     rp_dom = registered_domain(pe.domain_of(pe.return_path_addr))
     if from_dom and rp_dom and from_dom != rp_dom:
-        notes.append(f"Return-Path domain ({rp_dom}) does not align with From domain ({from_dom}).")
+        notes.append(f"Return-Path domain ({rp_dom}) differs from From domain ({from_dom}).")
 
     return AuthResult(
         spf=results["spf"], dkim=results["dkim"], dmarc=results["dmarc"],

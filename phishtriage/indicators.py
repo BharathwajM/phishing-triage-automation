@@ -102,16 +102,9 @@ def collect_indicators(pe: ParsedEmail, auth: AuthResult) -> list[Indicator]:
     from_dom = pe.domain_of(pe.from_addr)
     from_reg = registered_domain(from_dom)
 
-    # --- Authentication failures (surfaced from auth.py) ---
-    failing = auth.failing()
-    if failing:
-        ind.append(Indicator(
-            "AUTH_FAIL", "Sender authentication failed", "high",
-            "The receiving server could not verify the sender: " + ", ".join(failing) +
-            ". A legitimate bulk sender almost always passes SPF, DKIM and DMARC.",
-            "T1566.002 Spearphishing Link / T1534", evidence=pe.auth_results_raw[:200]))
+    # Score visible header discrepancies. Authentication claims are report-only.
     for n in auth.notes:
-        ind.append(Indicator("AUTH_NOTE", "Authentication anomaly", "medium", n,
+        ind.append(Indicator("AUTH_NOTE", "Return-Path domain differs from From", "medium", n,
                              "T1585 Establish Accounts"))
 
     # --- Display-name / identity spoofing ---

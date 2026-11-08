@@ -16,7 +16,8 @@ code{background:#f3f4f6;padding:1px 5px;border-radius:4px} ul{margin:6px 0;paddi
 <li><b>From:</b> Parcel Delivery &lt;notice@deliveries-notice.com&gt;</li>
 <li><b>Reply-To:</b> support@parcel-support-team.net</li>
 <li><b>Subject:</b> Your parcel could not be delivered - reschedule within 24 hours</li>
-<li><b>SPF/DKIM/DMARC:</b> <code>pass</code> / <code>pass</code> / <code>pass</code></li>
+<li><b>Reported SPF/DKIM/DMARC (unverified):</b> <code>pass</code> / <code>pass</code> / <code>pass</code></li>
+<li class="muted">Reported results are unverified. Confirm them in trusted mail gateway logs.</li>
 </ul>
 <h2>Indicators</h2><table><tr><td><span class="sev" style="background:#b8860b">MEDIUM</span></td><td><b>Reply-To redirects to a different domain</b><br><span class="muted">Replies would go to parcel-support-team.net, not the sender domain deliveries-notice.com - a common way to collect victim replies out of band.</span></td><td class="mono">T1534 Internal Spearphishing</td></tr><tr><td><span class="sev" style="background:#b8860b">MEDIUM</span></td><td><b>URL shortener hides the destination</b><br><span class="muted">bit.ly - the true landing page is concealed until clicked.</span></td><td class="mono">T1566.002 Spearphishing Link</td></tr><tr><td><span class="sev" style="background:#2457a6">LOW</span></td><td><b>Urgency / threat language</b><br><span class="muted">Pressure to act fast is a core social-engineering tactic.</span></td><td class="mono">T1566 Phishing</td></tr></table>
 <h2>Indicators of Compromise (defanged)</h2><ul><li>Sender domain: <code>deliveries-notice[.]com</code></li><li>URL: <code>hxxps://bit[.]ly/4a-reschedule</code></li></ul>
