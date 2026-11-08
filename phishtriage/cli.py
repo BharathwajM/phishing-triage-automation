@@ -13,7 +13,7 @@ import pathlib
 import sys
 
 from .auth import analyze_auth
-from .enrich import enrich
+from .enrich import Enrichment, enrich
 from .indicators import collect_indicators
 from .parser import parse_email
 from .report import build_html, build_markdown
@@ -44,8 +44,7 @@ def triage_one(path: pathlib.Path, do_enrich: bool):
         domains = sorted({registered_domain(url_host(u)) for u in pe.urls})
         enr = enrich(pe.urls, domains, hashes)
     else:
-        from .enrich import Enrichment
-        enr = Enrichment(enabled=False, skipped_reason="Enrichment disabled (--no-enrich).")
+        enr = Enrichment(enabled=False, skipped_reason="Live enrichment is off. Use --enrich to opt in.")
     return pe, auth, verdict, enr
 
 
@@ -57,7 +56,12 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--format", choices=["md", "html", "both"], default="both",
                     help="report format to write (default: both)")
     ap.add_argument("--json", action="store_true", help="print a machine-readable JSON summary to stdout")
-    ap.add_argument("--no-enrich", action="store_true", help="skip live threat-intel enrichment")
+    enrichment = ap.add_mutually_exclusive_group()
+    enrichment.add_argument("--enrich", action="store_true", dest="enrich",
+                            help="send indicators to configured threat-intel services")
+    enrichment.add_argument("--no-enrich", action="store_false", dest="enrich",
+                            help="run offline (default)")
+    ap.set_defaults(enrich=False)
     args = ap.parse_args(argv)
 
     files = _gather(args.emails)
@@ -71,7 +75,7 @@ def main(argv: list[str] | None = None) -> int:
 
     for f in files:
         try:
-            pe, auth, verdict, enr = triage_one(f, do_enrich=not args.no_enrich)
+            pe, auth, verdict, enr = triage_one(f, do_enrich=args.enrich)
         except Exception as e:
             print(f"ERROR triaging {f.name}: {e}", file=sys.stderr)
             continue

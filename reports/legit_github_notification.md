@@ -25,7 +25,7 @@ _No suspicious indicators detected._
 - **Domain:** ` github[.]com `
 
 ## Threat-intel enrichment
-_Enrichment disabled (--no-enrich)._
+_Live enrichment is off. Use --enrich to opt in._
 
 ## Recommended analyst actions
 - Confirm sender legitimacy and message context before releasing from quarantine.

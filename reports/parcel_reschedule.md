@@ -29,7 +29,7 @@
 - **Domain:** ` bit[.]ly `
 
 ## Threat-intel enrichment
-_Enrichment disabled (--no-enrich)._
+_Live enrichment is off. Use --enrich to opt in._
 
 ## Recommended analyst actions
 - Hold for analyst review; do not release to the user yet.

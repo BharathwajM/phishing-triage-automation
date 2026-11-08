@@ -31,7 +31,7 @@
 - **Domain:** ` 0ffice365-login[.]com `
 
 ## Threat-intel enrichment
-_Enrichment disabled (--no-enrich)._
+_Live enrichment is off. Use --enrich to opt in._
 
 ## Recommended analyst actions
 - Do not interact. Quarantine/delete from any inboxes that received it.

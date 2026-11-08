@@ -4,10 +4,10 @@ A command-line tool that does a SOC analyst's **first-pass triage of a suspiciou
 
 Triaging reported phishing is one of the highest-volume jobs in a SOC. This tool does the repetitive part — extract, analyse, score, document — so the analyst spends their time on the judgement call, not the copy-paste.
 
-**Pure Python standard library — clone and run, nothing to install.** Live threat-intel enrichment (VirusTotal, abuse.ch) is optional and switches on only if you add an API key.
+**Pure Python standard library — clone and run, nothing to install.** The default run is offline, including when VirusTotal or URLhaus API keys are set.
 
 ```
-$ python -m phishtriage --no-enrich samples/
+$ python -m phishtriage samples/
 [x] MALICIOUS      100/100  ato_refund_scam.eml  (5 indicators)
 [!] SUSPICIOUS      48/100  invoice_macro.eml  (3 indicators)
 [.] BENIGN           0/100  legit_github_notification.eml  (0 indicators)
@@ -52,15 +52,16 @@ Authentication claims in an `.eml` are **unverified** and do not contribute to t
 
 ### Optional enrichment
 
-Set either key and the tool adds live reputation lookups (it still works fully without them):
+Set a key and pass `--enrich` to run live reputation lookups.
 
 ```bash
 export VT_API_KEY=...        # VirusTotal: attachment SHA-256 reputation
 export URLHAUS_API_KEY=...   # abuse.ch URLhaus: known-malware URLs
 pip install requests         # only needed for enrichment
+python -m phishtriage --enrich samples/
 ```
 
-With URLhaus enabled, extracted URLs are sent to the service. Use `--no-enrich` for offline triage or when URLs or hashes cannot be shared.
+With `--enrich`, URLhaus receives full extracted URLs, including query parameters. VirusTotal receives attachment SHA-256 hashes. Use the default offline mode or pass `--no-enrich` when these indicators need to stay local.
 
 ## How it's built
 
@@ -81,7 +82,7 @@ phishtriage/
 python -m unittest discover -s tests -v
 ```
 
-Tests cover the expected sample verdicts, forged authentication claims, and email markup in reports.
+Tests cover sample verdicts, forged authentication claims, email markup in reports, and the CLI's offline default with API keys present.
 
 ---
 

@@ -28,7 +28,7 @@
 - **Attachment:** ` Invoice_4471.docm ` — sha256 `9bb9673e635e72b6e9f28aada43d8031b86598339ce0e80f91c5fdaf083dec04`
 
 ## Threat-intel enrichment
-_Enrichment disabled (--no-enrich)._
+_Live enrichment is off. Use --enrich to opt in._
 
 ## Recommended analyst actions
 - Hold for analyst review; do not release to the user yet.

@@ -1,5 +1,5 @@
 """Optional threat-intel enrichment. The tool is fully useful WITHOUT this -
-enrichment activates only when an API key is present in the environment:
+the CLI calls it with --enrich, and each service requires its API key:
 
     VT_API_KEY        VirusTotal (urls, domains, file hashes)   https://www.virustotal.com
     URLHAUS_API_KEY   abuse.ch URLhaus (malware URLs)           https://urlhaus.abuse.ch

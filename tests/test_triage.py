@@ -1,13 +1,19 @@
 """End-to-end checks: the sample phishing emails must be caught and the
 legitimate controls must not be flagged. Run with: python -m unittest discover -s tests -v
 Pure standard library - no pytest needed."""
+import io
+import os
 import pathlib
 import sys
 import unittest
+from contextlib import redirect_stdout
+from tempfile import TemporaryDirectory
+from unittest.mock import patch
 
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parents[1]))
 
 from phishtriage.auth import analyze_auth
+from phishtriage.cli import main
 from phishtriage.enrich import Enrichment
 from phishtriage.indicators import collect_indicators
 from phishtriage.parser import parse_email
@@ -103,6 +109,26 @@ class TestUntrustedReports(unittest.TestCase):
         html = build_html(pe, auth, verdict, enr)
         self.assertIn("&lt;img", html)
         self.assertNotIn("<img", html)
+
+
+class TestCliEnrichment(unittest.TestCase):
+    def test_default_and_no_enrich_skip_external_services_with_keys_present(self):
+        for flags in ([], ["--no-enrich"]):
+            with self.subTest(flags=flags), TemporaryDirectory() as out:
+                with patch.dict(os.environ, {"VT_API_KEY": "test", "URLHAUS_API_KEY": "test"}):
+                    with patch("phishtriage.cli.enrich") as lookup, redirect_stdout(io.StringIO()):
+                        result = main([str(SAMPLES / "paypal_credphish.eml"), "--out", out, *flags])
+                self.assertEqual(result, 0)
+                lookup.assert_not_called()
+                report = pathlib.Path(out) / "paypal_credphish.md"
+                self.assertIn("Live enrichment is off", report.read_text(encoding="utf-8"))
+
+    def test_enrich_flag_calls_the_lookup(self):
+        with TemporaryDirectory() as out, redirect_stdout(io.StringIO()):
+            with patch("phishtriage.cli.enrich", return_value=Enrichment(enabled=True)) as lookup:
+                result = main([str(SAMPLES / "paypal_credphish.eml"), "--out", out, "--enrich"])
+        self.assertEqual(result, 0)
+        lookup.assert_called_once()
 
 
 if __name__ == "__main__":
