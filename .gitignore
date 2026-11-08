@@ -1,0 +1,8 @@
+__pycache__/
+*.pyc
+.venv/
+venv/
+*.local.txt
+# Reports from the bundled samples are committed as examples (reports/);
+# ignore any ad-hoc output written elsewhere.
+/out/

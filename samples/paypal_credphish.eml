@@ -1,0 +1,22 @@
+From: "PayPal Service" <service@paypa1-secure.com>
+Reply-To: <recover@mail-paypaI.ru>
+Return-Path: <bounce@paypa1-secure.com>
+To: victim@example.com
+Subject: Your account has been limited - action required within 24 hours
+Date: Tue, 04 Nov 2026 03:14:22 +0000
+Message-ID: <a71c9f2e@paypa1-secure.com>
+Authentication-Results: mx.example.com; spf=fail smtp.mailfrom=paypa1-secure.com;
+ dkim=none; dmarc=fail header.from=paypa1-secure.com
+Received-SPF: fail (example.com: domain of paypa1-secure.com does not designate sender)
+MIME-Version: 1.0
+Content-Type: text/html; charset="utf-8"
+
+<html><body>
+<p>Dear Customer,</p>
+<p>We detected <b>unusual sign-in activity</b> on your PayPal account. Your account
+has been <b>limited</b>. You must verify your identity immediately to avoid permanent
+suspension within 24 hours.</p>
+<p><a href="http://account-paypal.verify-id.ru/login">Log in to confirm your account</a></p>
+<p>Or copy this link: <a href="http://198.51.100.23/ppl/secure">https://www.paypal.com/signin</a></p>
+<p>Thank you,<br>The PayPal Security Team</p>
+</body></html>

@@ -1,0 +1,19 @@
+From: "Parcel Delivery" <notice@deliveries-notice.com>
+Reply-To: <support@parcel-support-team.net>
+Return-Path: <notice@deliveries-notice.com>
+To: shopper@example.com
+Subject: Your parcel could not be delivered - reschedule within 24 hours
+Date: Sat, 08 Nov 2026 06:30:00 +0000
+Message-ID: <trk7781@deliveries-notice.com>
+Authentication-Results: mx.example.com; spf=pass smtp.mailfrom=deliveries-notice.com;
+ dkim=pass header.d=deliveries-notice.com; dmarc=pass header.from=deliveries-notice.com
+MIME-Version: 1.0
+Content-Type: text/html; charset="utf-8"
+
+<html><body>
+<p>Hi,</p>
+<p>We attempted to deliver your parcel today but were unable to. Please reschedule your
+delivery within 24 hours or the parcel will be returned to the depot.</p>
+<p><a href="https://bit.ly/4a-reschedule">Reschedule my delivery</a></p>
+<p>Thank you,<br>Parcel Delivery Team</p>
+</body></html>

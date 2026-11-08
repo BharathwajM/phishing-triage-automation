@@ -1,0 +1,33 @@
+From: "Accounts Payable" <billing@invoices-globex.com>
+Reply-To: <billing@invoices-globex.com>
+Return-Path: <billing@invoices-globex.com>
+To: finance@example.com
+Subject: Overdue invoice #4471 - immediate payment required
+Date: Thu, 06 Nov 2026 14:41:09 +0000
+Message-ID: <inv4471@invoices-globex.com>
+Authentication-Results: mx.example.com; spf=softfail smtp.mailfrom=invoices-globex.com;
+ dkim=none; dmarc=none header.from=invoices-globex.com
+MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary="=_b1"
+
+--=_b1
+Content-Type: text/plain; charset="utf-8"
+
+Hello,
+
+Please find attached our overdue invoice #4471. Payment is now past due and must be
+settled immediately to avoid your account being sent to collections. Enable editing
+and macros to view the full invoice and wire transfer details.
+
+Regards,
+Accounts Payable
+
+--=_b1
+Content-Type: application/vnd.ms-word.document.macroEnabled.12; name="Invoice_4471.docm"
+Content-Disposition: attachment; filename="Invoice_4471.docm"
+Content-Transfer-Encoding: base64
+
+SW52b2ljZSBwbGFjZWhvbGRlciAtIG5vdCBhIHJlYWwgZG9jdW1lbnQsIHVzZWQgdG8gZGVtbyBh
+dHRhY2htZW50IHRyaWFnZS4=
+
+--=_b1--

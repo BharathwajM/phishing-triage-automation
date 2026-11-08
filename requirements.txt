@@ -1,0 +1,4 @@
+# Core triage uses the Python standard library only - nothing to install.
+# The following is OPTIONAL and only needed for live threat-intel enrichment
+# (set VT_API_KEY / URLHAUS_API_KEY to activate it):
+requests>=2.31.0

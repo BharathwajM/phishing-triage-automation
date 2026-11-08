@@ -1,0 +1,20 @@
+From: "People & Culture" <hr@example.com>
+Reply-To: <hr@example.com>
+Return-Path: <hr@example.com>
+To: allstaff@example.com
+Subject: Reminder: office closed Monday for the public holiday
+Date: Fri, 07 Nov 2026 02:20:00 +0000
+Message-ID: <hrnotice1107@example.com>
+Authentication-Results: mx.example.com; spf=pass smtp.mailfrom=example.com;
+ dkim=pass header.d=example.com; dmarc=pass header.from=example.com
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+
+Hi everyone,
+
+A quick reminder that the office will be closed this Monday for the public holiday.
+Normal hours resume Tuesday. The staff handbook has the full list of 2026 holidays on
+the intranet if you need it.
+
+Enjoy the long weekend,
+People & Culture

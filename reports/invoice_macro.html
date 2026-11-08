@@ -1,0 +1,26 @@
+<!doctype html><html><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Phishing Triage - MALICIOUS</title><style>
+:root{color-scheme:light} body{font:14px/1.5 -apple-system,Segoe UI,Roboto,sans-serif;
+max-width:860px;margin:24px auto;padding:0 16px;color:#1f2328}
+h1{font-size:20px;margin:0 0 4px} .banner{background:#b3261e;color:#fff;padding:14px 18px;border-radius:10px;margin-bottom:16px}
+.banner .score{opacity:.9;font-size:13px} h2{font-size:15px;border-bottom:2px solid #2457a6;color:#2457a6;padding-bottom:3px;margin-top:22px}
+table{border-collapse:collapse;width:100%} td{border-top:1px solid #e3e6ea;padding:8px;vertical-align:top}
+.sev{color:#fff;border-radius:5px;padding:2px 7px;font-size:11px;font-weight:700;white-space:nowrap}
+.muted{color:#5f6368} .mono,code{font-family:ui-monospace,Consolas,monospace;font-size:12px}
+code{background:#f3f4f6;padding:1px 5px;border-radius:4px} ul{margin:6px 0;padding-left:20px}
+.kv li{list-style:none;margin-left:-20px}</style></head><body>
+<div class="banner"><h1>Phishing Triage — MALICIOUS</h1>
+<div class="score">Risk score 80/100 · 4 indicator(s) (2 high, 2 low); risk score 80/100 -&gt; MALICIOUS.</div></div>
+<h2>Email</h2><ul class="kv">
+<li><b>From:</b> Accounts Payable &lt;billing@invoices-globex.com&gt;</li>
+<li><b>Reply-To:</b> billing@invoices-globex.com</li>
+<li><b>Subject:</b> Overdue invoice #4471 - immediate payment required</li>
+<li><b>SPF/DKIM/DMARC:</b> <code>softfail</code> / <code>none</code> / <code>none</code></li>
+</ul>
+<h2>Indicators</h2><table><tr><td><span class="sev" style="background:#d9480f">HIGH</span></td><td><b>Sender authentication failed</b><br><span class="muted">The receiving server could not verify the sender: SPF=softfail, DKIM=none, DMARC=none. A legitimate bulk sender almost always passes SPF, DKIM and DMARC.</span></td><td class="mono">T1566.002 Spearphishing Link / T1534</td></tr><tr><td><span class="sev" style="background:#d9480f">HIGH</span></td><td><b>Macro-enabled Office attachment</b><br><span class="muted">Invoice_4471.docm (.docm) can carry auto-executing macros.</span></td><td class="mono">T1566.001 Spearphishing Attachment</td></tr><tr><td><span class="sev" style="background:#2457a6">LOW</span></td><td><b>Urgency / threat language</b><br><span class="muted">Pressure to act fast is a core social-engineering tactic.</span></td><td class="mono">T1566 Phishing</td></tr><tr><td><span class="sev" style="background:#2457a6">LOW</span></td><td><b>Financial / payment lure</b><br><span class="muted">Invoice, refund or payment themes are common pretexts.</span></td><td class="mono">T1566 Phishing</td></tr></table>
+<h2>Indicators of Compromise (defanged)</h2><ul><li>Sender domain: <code>invoices-globex[.]com</code></li><li>Attachment: <code>Invoice_4471.docm</code> — sha256 <code>9bb9673e635e72b6e9f28aada43d8031b86598339ce0e80f91c5fdaf083dec04</code></li></ul>
+<h2>Threat-intel enrichment</h2><p class="muted">Enrichment disabled (--no-enrich).</p>
+<h2>Recommended analyst actions</h2><ul><li>Do not interact. Quarantine/delete from any inboxes that received it.</li><li>Block the sender domain and all IOC domains/URLs at the mail gateway and proxy.</li><li>Search mail logs for other recipients; pull the message org-wide.</li><li>If links/attachments were opened, isolate the host and begin IR.</li></ul>
+<p class="muted">MITRE ATT&amp;CK: T1566.002 Spearphishing Link / T1534, T1566.001 Spearphishing Attachment, T1566 Phishing</p>
+</body></html>

@@ -1,0 +1,18 @@
+From: "GitHub" <notifications@github.com>
+Reply-To: "BharathwajM/soc-portfolio-lab" <reply@reply.github.com>
+Return-Path: <bounces@github.com>
+To: dev@example.com
+Subject: [BharathwajM/soc-portfolio-lab] New comment on issue #3
+Date: Sat, 08 Nov 2026 11:05:40 +0000
+Message-ID: <issue3comment@github.com>
+Authentication-Results: mx.example.com; spf=pass smtp.mailfrom=github.com;
+ dkim=pass header.d=github.com; dmarc=pass header.from=github.com
+MIME-Version: 1.0
+Content-Type: text/html; charset="utf-8"
+
+<html><body>
+<p>A new comment was added to issue #3 in your repository.</p>
+<p>"Nice write-up on the honeypot results - the timeline is really clear."</p>
+<p><a href="https://github.com/BharathwajM/soc-portfolio-lab/issues/3">View it on GitHub</a></p>
+<p>You are receiving this because you are watching this repository.</p>
+</body></html>

@@ -1,0 +1,21 @@
+From: "Australian Taxation Office" <refunds@ato-myrefund.net>
+Reply-To: <refunds@ato-myrefund.net>
+Return-Path: <refunds@ato-myrefund.net>
+To: taxpayer@example.com
+Subject: You have a pending tax refund of $1,284.50 - confirm your details
+Date: Fri, 07 Nov 2026 22:10:55 +1100
+Message-ID: <refund9981@ato-myrefund.net>
+Authentication-Results: mx.example.com; spf=fail smtp.mailfrom=ato-myrefund.net;
+ dkim=fail header.d=ato-myrefund.net; dmarc=fail header.from=ato-myrefund.net
+Received-SPF: fail
+MIME-Version: 1.0
+Content-Type: text/html; charset="utf-8"
+
+<html><body>
+<p>Dear Taxpayer,</p>
+<p>Our records show you are eligible for a tax refund of <b>$1,284.50</b>. To receive
+your refund you must confirm your identity and bank details before the deadline.</p>
+<p><a href="http://my-gov.ato-myrefund.net/refund/claim">Claim your refund now</a></p>
+<p>Failure to verify your details will result in forfeiture of your refund.</p>
+<p>Australian Taxation Office</p>
+</body></html>
