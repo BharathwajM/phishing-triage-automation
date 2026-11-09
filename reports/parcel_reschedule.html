@@ -10,7 +10,7 @@ table{border-collapse:collapse;width:100%} td{border-top:1px solid #e3e6ea;paddi
 .muted{color:#5f6368} .mono,code{font-family:ui-monospace,Consolas,monospace;font-size:12px}
 code{background:#f3f4f6;padding:1px 5px;border-radius:4px} ul{margin:6px 0;padding-left:20px}
 .kv li{list-style:none;margin-left:-20px}</style></head><body>
-<div class="banner"><h1>Phishing Triage — SUSPICIOUS</h1>
+<div class="banner"><h1>Phishing Triage: SUSPICIOUS</h1>
 <div class="score">Risk score 48/100 · 3 indicator(s) (2 medium, 1 low); risk score 48/100 -&gt; SUSPICIOUS.</div></div>
 <h2>Email</h2><ul class="kv">
 <li><b>From:</b> Parcel Delivery &lt;notice@deliveries-notice.com&gt;</li>
@@ -19,9 +19,9 @@ code{background:#f3f4f6;padding:1px 5px;border-radius:4px} ul{margin:6px 0;paddi
 <li><b>Reported SPF/DKIM/DMARC (unverified):</b> <code>pass</code> / <code>pass</code> / <code>pass</code></li>
 <li class="muted">Reported results are unverified. Confirm them in trusted mail gateway logs.</li>
 </ul>
-<h2>Indicators</h2><table><tr><td><span class="sev" style="background:#b8860b">MEDIUM</span></td><td><b>Reply-To redirects to a different domain</b><br><span class="muted">Replies would go to parcel-support-team.net, not the sender domain deliveries-notice.com - a common way to collect victim replies out of band.</span></td><td class="mono">T1534 Internal Spearphishing</td></tr><tr><td><span class="sev" style="background:#b8860b">MEDIUM</span></td><td><b>URL shortener hides the destination</b><br><span class="muted">bit.ly - the true landing page is concealed until clicked.</span></td><td class="mono">T1566.002 Spearphishing Link</td></tr><tr><td><span class="sev" style="background:#2457a6">LOW</span></td><td><b>Urgency / threat language</b><br><span class="muted">Pressure to act fast is a core social-engineering tactic.</span></td><td class="mono">T1566 Phishing</td></tr></table>
+<h2>Indicators</h2><table><tr><td><span class="sev" style="background:#b8860b">MEDIUM</span></td><td><b>Reply-To redirects to a different domain</b><br><span class="muted">Replies would go to parcel-support-team.net, not the sender domain deliveries-notice.com - a common way to collect victim replies out of band.</span></td><td class="mono">T1566 Phishing</td></tr><tr><td><span class="sev" style="background:#b8860b">MEDIUM</span></td><td><b>URL shortener hides the destination</b><br><span class="muted">bit.ly - the true landing page is concealed until clicked.</span></td><td class="mono">T1566.002 Spearphishing Link</td></tr><tr><td><span class="sev" style="background:#2457a6">LOW</span></td><td><b>Urgency / threat language</b><br><span class="muted">Pressure to act fast is a core social-engineering tactic.</span></td><td class="mono">T1566 Phishing</td></tr></table>
 <h2>Indicators of Compromise (defanged)</h2><ul><li>Sender domain: <code>deliveries-notice[.]com</code></li><li>URL: <code>hxxps://bit[.]ly/4a-reschedule</code></li></ul>
 <h2>Threat-intel enrichment</h2><p class="muted">Live enrichment is off. Use --enrich to opt in.</p>
 <h2>Recommended analyst actions</h2><ul><li>Hold for analyst review; do not release to the user yet.</li><li>Detonate links/attachments in a sandbox before any verdict.</li><li>Confirm sender legitimacy out-of-band if it claims to be internal/a vendor.</li></ul>
-<p class="muted">MITRE ATT&amp;CK: T1534 Internal Spearphishing, T1566.002 Spearphishing Link, T1566 Phishing</p>
+<p class="muted">MITRE ATT&amp;CK: T1566 Phishing, T1566.002 Spearphishing Link</p>
 </body></html>

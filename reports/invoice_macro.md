@@ -1,5 +1,5 @@
 # Phishing Triage Report - SUSPICIOUS
-*Generated 2026-11-08 09:42 UTC by phishtriage*
+*Generated 2026-11-09 00:54 UTC by phishtriage*
 
 **Verdict:** SUSPICIOUS  |  **Risk score:** 48/100
 
@@ -25,7 +25,7 @@
 
 ## Indicators of Compromise (defanged)
 - **Sender domain:** ` invoices-globex[.]com `
-- **Attachment:** ` Invoice_4471.docm ` — sha256 `9bb9673e635e72b6e9f28aada43d8031b86598339ce0e80f91c5fdaf083dec04`
+- **Attachment:** ` Invoice_4471.docm `, sha256 `9bb9673e635e72b6e9f28aada43d8031b86598339ce0e80f91c5fdaf083dec04`
 
 ## Threat-intel enrichment
 _Live enrichment is off. Use --enrich to opt in._

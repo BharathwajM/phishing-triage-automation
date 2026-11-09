@@ -131,7 +131,7 @@ def collect_indicators(pe: ParsedEmail, auth: AuthResult) -> list[Indicator]:
                 "REPLYTO_MISMATCH", "Reply-To redirects to a different domain", "medium",
                 f"Replies would go to {rt}, not the sender domain {from_reg} - a common "
                 "way to collect victim replies out of band.",
-                "T1534 Internal Spearphishing", evidence=pe.reply_to_addr))
+                "T1566 Phishing", evidence=pe.reply_to_addr))
 
     # --- Look-alike / typo-squat sender ---
     lk = _looks_like_brand(from_dom)

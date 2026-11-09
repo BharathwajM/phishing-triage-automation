@@ -1,5 +1,5 @@
 # Phishing Triage Report - SUSPICIOUS
-*Generated 2026-11-08 09:42 UTC by phishtriage*
+*Generated 2026-11-09 00:54 UTC by phishtriage*
 
 **Verdict:** SUSPICIOUS  |  **Risk score:** 48/100
 
@@ -19,7 +19,7 @@
 ## Indicators
 | Severity | Finding | ATT&CK | Detail |
 |---|---|---|---|
-| MEDIUM | Reply-To redirects to a different domain | T1534 Internal Spearphishing | ` Replies would go to parcel-support-team.net, not the sender domain deliveries-notice.com - a common way to collect victim replies out of band. ` |
+| MEDIUM | Reply-To redirects to a different domain | T1566 Phishing | ` Replies would go to parcel-support-team.net, not the sender domain deliveries-notice.com - a common way to collect victim replies out of band. ` |
 | MEDIUM | URL shortener hides the destination | T1566.002 Spearphishing Link | ` bit.ly - the true landing page is concealed until clicked. ` |
 | LOW | Urgency / threat language | T1566 Phishing | ` Pressure to act fast is a core social-engineering tactic. ` |
 
@@ -36,4 +36,4 @@ _Live enrichment is off. Use --enrich to opt in._
 - Detonate links/attachments in a sandbox before any verdict.
 - Confirm sender legitimacy out-of-band if it claims to be internal/a vendor.
 
-**MITRE ATT&CK:** T1534 Internal Spearphishing, T1566.002 Spearphishing Link, T1566 Phishing
+**MITRE ATT&CK:** T1566 Phishing, T1566.002 Spearphishing Link

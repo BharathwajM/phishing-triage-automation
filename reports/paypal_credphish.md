@@ -1,5 +1,5 @@
 # Phishing Triage Report - MALICIOUS
-*Generated 2026-11-08 09:42 UTC by phishtriage*
+*Generated 2026-11-09 00:54 UTC by phishtriage*
 
 **Verdict:** MALICIOUS  |  **Risk score:** 100/100
 
@@ -25,7 +25,7 @@
 | HIGH | Link text hides its real destination | T1566.002 Spearphishing Link | ` A link displayed as "https://www.paypal.com/signin" actually points to 198.51.100.23. ` |
 | HIGH | Brand name buried in an unrelated domain | T1566.002 Spearphishing Link | ` "paypal" appears in account-paypal.verify-id.ru, but the real domain is verify-id.ru. ` |
 | HIGH | Link points to a raw IP address | T1566.002 Spearphishing Link | ` 198.51.100.23 - legitimate brands use named domains, not bare IPs. ` |
-| MEDIUM | Reply-To redirects to a different domain | T1534 Internal Spearphishing | ` Replies would go to mail-paypai.ru, not the sender domain paypa1-secure.com - a common way to collect victim replies out of band. ` |
+| MEDIUM | Reply-To redirects to a different domain | T1566 Phishing | ` Replies would go to mail-paypai.ru, not the sender domain paypa1-secure.com - a common way to collect victim replies out of band. ` |
 | MEDIUM | Credential-harvest lure with a link | T1566.002 Spearphishing Link | ` Asks the recipient to log in / verify via a link - classic credential theft. ` |
 | LOW | Urgency / threat language | T1566 Phishing | ` Pressure to act fast is a core social-engineering tactic. ` |
 
@@ -45,4 +45,4 @@ _Live enrichment is off. Use --enrich to opt in._
 - Search mail logs for other recipients; pull the message org-wide.
 - If links/attachments were opened, isolate the host and begin IR.
 
-**MITRE ATT&CK:** T1656 Impersonation, T1534 Internal Spearphishing, T1583.001 Domain Registration, T1566.002 Spearphishing Link, T1566 Phishing
+**MITRE ATT&CK:** T1656 Impersonation, T1566 Phishing, T1583.001 Domain Registration, T1566.002 Spearphishing Link

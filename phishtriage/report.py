@@ -98,7 +98,7 @@ def build_markdown(pe: ParsedEmail, auth: AuthResult, v: Verdict, enr: Enrichmen
     for d in ioc["domains"]:
         L.append(f"- **Domain:** {_markdown_literal(defang(d))}")
     for fn, sha in ioc["attachments"]:
-        L.append(f"- **Attachment:** {_markdown_literal(fn)} — sha256 `{sha}`")
+        L.append(f"- **Attachment:** {_markdown_literal(fn)}, sha256 `{sha}`")
     if not (ioc["urls"] or ioc["domains"] or ioc["attachments"]):
         L.append("_None extracted._")
 
@@ -142,7 +142,7 @@ def build_html(pe: ParsedEmail, auth: AuthResult, v: Verdict, enr: Enrichment) -
     for u in ioc["urls"]:
         iocs += f'<li>URL: <code>{e(defang(u))}</code></li>'
     for fn, sha in ioc["attachments"]:
-        iocs += f'<li>Attachment: <code>{e(fn)}</code> — sha256 <code>{e(sha)}</code></li>'
+        iocs += f'<li>Attachment: <code>{e(fn)}</code>, sha256 <code>{e(sha)}</code></li>'
     recs = "".join(f"<li>{e(a)}</li>" for a in _recommendation(v))
     vc = _VERDICT_COLOR.get(v.label, "#444")
     enr_txt = (e(enr.skipped_reason) if not enr.enabled else
@@ -162,7 +162,7 @@ table{{border-collapse:collapse;width:100%}} td{{border-top:1px solid #e3e6ea;pa
 .muted{{color:#5f6368}} .mono,code{{font-family:ui-monospace,Consolas,monospace;font-size:12px}}
 code{{background:#f3f4f6;padding:1px 5px;border-radius:4px}} ul{{margin:6px 0;padding-left:20px}}
 .kv li{{list-style:none;margin-left:-20px}}</style></head><body>
-<div class="banner"><h1>Phishing Triage — {e(v.label)}</h1>
+<div class="banner"><h1>Phishing Triage: {e(v.label)}</h1>
 <div class="score">Risk score {v.score}/100 · {e(v.summary)}</div></div>
 <h2>Email</h2><ul class="kv">
 <li><b>From:</b> {e(pe.from_display)} &lt;{e(pe.from_addr or 'n/a')}&gt;</li>
