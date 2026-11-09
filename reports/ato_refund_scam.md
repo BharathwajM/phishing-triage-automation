@@ -1,9 +1,9 @@
 # Phishing Triage Report - MALICIOUS
-*Generated 2026-11-09 00:54 UTC by phishtriage*
+*Generated 2026-11-09 15:10 UTC by phishtriage*
 
-**Verdict:** MALICIOUS  |  **Risk score:** 100/100
+**Verdict:** MALICIOUS  |  **Risk score:** 93/100
 
-5 indicator(s) (2 critical, 1 high, 2 low); risk score 100/100 -> MALICIOUS.
+4 indicator(s) (1 critical, 1 high, 2 low); risk score 93/100 -> MALICIOUS.
 
 ## Email
 - **From:** ` Australian Taxation Office <refunds@ato-myrefund.net> `
@@ -20,7 +20,6 @@
 | Severity | Finding | ATT&CK | Detail |
 |---|---|---|---|
 | CRITICAL | Sender domain looks like a known brand | T1583.001 Domain Registration | ` Sending domain ato-myrefund.net imitates ato (real domain ato.gov.au). ` |
-| CRITICAL | Link domain imitates a brand | T1583.001 Domain Registration | ` ato-myrefund.net imitates ato (real domain ato.gov.au). ` |
 | HIGH | Brand name buried in an unrelated domain | T1566.002 Spearphishing Link | ` "ato" appears in my-gov.ato-myrefund.net, but the real domain is ato-myrefund.net. ` |
 | LOW | Urgency / threat language | T1566 Phishing | ` Pressure to act fast is a core social-engineering tactic. ` |
 | LOW | Financial / payment lure | T1566 Phishing | ` Invoice, refund or payment themes are common pretexts. ` |

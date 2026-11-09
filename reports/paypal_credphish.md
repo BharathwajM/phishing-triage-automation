@@ -1,9 +1,9 @@
 # Phishing Triage Report - MALICIOUS
-*Generated 2026-11-09 00:54 UTC by phishtriage*
+*Generated 2026-11-09 15:10 UTC by phishtriage*
 
 **Verdict:** MALICIOUS  |  **Risk score:** 100/100
 
-9 indicator(s) (2 critical, 4 high, 2 medium, 1 low); risk score 100/100 -> MALICIOUS.
+8 indicator(s) (1 critical, 4 high, 1 medium, 2 low); risk score 100/100 -> MALICIOUS.
 
 ## Email
 - **From:** ` PayPal Service <service@paypa1-secure.com> `
@@ -20,13 +20,12 @@
 | Severity | Finding | ATT&CK | Detail |
 |---|---|---|---|
 | CRITICAL | Sender domain looks like a known brand | T1583.001 Domain Registration | ` Sending domain paypa1-secure.com imitates paypal (real domain paypal.com). ` |
-| CRITICAL | Link domain imitates a brand | T1583.001 Domain Registration | ` verify-id.ru imitates paypal (real domain paypal.com). ` |
 | HIGH | Display name impersonates a brand | T1656 Impersonation | ` From shows "PayPal Service" but the real sending domain is paypa1-secure.com, not paypal.com. ` |
 | HIGH | Link text hides its real destination | T1566.002 Spearphishing Link | ` A link displayed as "https://www.paypal.com/signin" actually points to 198.51.100.23. ` |
 | HIGH | Brand name buried in an unrelated domain | T1566.002 Spearphishing Link | ` "paypal" appears in account-paypal.verify-id.ru, but the real domain is verify-id.ru. ` |
 | HIGH | Link points to a raw IP address | T1566.002 Spearphishing Link | ` 198.51.100.23 - legitimate brands use named domains, not bare IPs. ` |
-| MEDIUM | Reply-To redirects to a different domain | T1566 Phishing | ` Replies would go to mail-paypai.ru, not the sender domain paypa1-secure.com - a common way to collect victim replies out of band. ` |
 | MEDIUM | Credential-harvest lure with a link | T1566.002 Spearphishing Link | ` Asks the recipient to log in / verify via a link - classic credential theft. ` |
+| LOW | Reply-To redirects to a different domain | T1566 Phishing | ` Replies would go to mail-paypai.ru, not the sender domain paypa1-secure.com - a common way to collect victim replies out of band. ` |
 | LOW | Urgency / threat language | T1566 Phishing | ` Pressure to act fast is a core social-engineering tactic. ` |
 
 ## Indicators of Compromise (defanged)

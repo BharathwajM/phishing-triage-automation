@@ -50,6 +50,13 @@ DANGEROUS_EXT = {"exe", "scr", "pif", "com", "bat", "cmd", "js", "jse", "vbs",
                  "vbe", "wsf", "hta", "ps1", "jar", "msi", "iso", "img", "lnk"}
 MACRO_EXT = {"docm", "xlsm", "pptm", "dotm", "xlam", "xll"}
 ARCHIVE_EXT = {"zip", "rar", "7z", "gz", "tar", "iso", "img"}
+# HTML-type attachments open a local web page, often a fake login form (HTML smuggling).
+HTML_EXT = {"html", "htm", "shtml", "xhtml", "svg", "mht", "mhtml"}
+# IPFS gateways: content is hard to take down and almost never linked from business email.
+IPFS_HOSTS = {"ipfs.io", "dweb.link", "cloudflare-ipfs.com", "w3s.link", "nftstorage.link"}
+# Free developer hosting with instant HTTPS subdomains, heavily abused for phishing pages.
+FREE_HOSTING = {"r2.dev", "workers.dev", "pages.dev", "vercel.app", "glitch.me", "on-fleek.app",
+                "netlify.app", "web.app", "firebaseapp.com", "000webhostapp.com"}
 
 _URGENCY = re.compile(r"\b(urgent|immediately|within 24 hours|action required|final notice|"
                       r"suspend(ed|ing)?|deactivat(e|ed)|verify (your|now)|confirm your|"
@@ -72,8 +79,30 @@ def _normalize(token: str) -> str:
     return token.translate(_HOMOGLYPHS).replace("rn", "m").replace("vv", "w")
 
 
-def _looks_like_brand(domain: str) -> tuple[str, str] | None:
-    """Return (brand, official_domain) if `domain` impersonates a brand, else None."""
+def _labels(host: str) -> list[str]:
+    """Whole-word tokens of a host name: groups.msn.com -> ["groups", "msn", "com"]."""
+    return host.lower().replace("-", ".").split(".")
+
+
+def _brand_in(text: str, brand: str) -> bool:
+    """Brand name inside a host or display name.
+
+    Short names (ups, ato, dhl) must be a whole word, or "ups" would match groups.google.com.
+    Longer names only need to start a word, so "Microsoft365 Support" and
+    microsoftonline-verify.com still match."""
+    tail = r"\b" if len(brand) < 5 else ""
+    return re.search(rf"\b{re.escape(brand)}{tail}", text.replace("-", " ")) is not None
+
+
+def _is_official(host: str, official: str) -> bool:
+    return host == official or host.endswith("." + official)
+
+
+def _looks_like_brand(domain: str, include_labels: bool = True) -> tuple[str, str] | None:
+    """Return (brand, official_domain) if `domain` impersonates a brand, else None.
+
+    include_labels=False skips the "brand is a whole label" case, so link checks do not
+    double-count what URL_SUBDOMAIN_BRAND already reports."""
     reg = registered_domain(domain)
     if not reg:
         return None
@@ -81,18 +110,20 @@ def _looks_like_brand(domain: str) -> tuple[str, str] | None:
     core = reg.split(".")[0]
     tokens = core.split("-")
     norm_tokens = [_normalize(t) for t in tokens]
-    all_labels = domain.replace("-", ".").split(".")
+    all_labels = _labels(domain)
     for brand, official in BRANDS.items():
-        if reg == official or domain.endswith("." + official) or domain == official:
+        if reg == official or _is_official(domain, official):
             return None  # it IS the brand (or a real subdomain of it)
         # brand name appears as a whole label but the domain is not the official one
-        if brand in all_labels:
+        if include_labels and brand in all_labels:
             return (brand, official)
         # homoglyph / typo-squat on any token of the registrable label
         for tok, ntok in zip(tokens, norm_tokens):
             if ntok == brand and tok != brand:
                 return (brand, official)
-            if difflib.SequenceMatcher(None, ntok, brand).ratio() >= 0.85 and ntok != brand:
+            # Fuzzy matching on short names (ups, ato) matches ordinary words, so skip it.
+            if (len(brand) >= 5 and ntok != brand
+                    and difflib.SequenceMatcher(None, ntok, brand).ratio() >= 0.85):
                 return (brand, official)
     return None
 
@@ -103,13 +134,14 @@ def collect_indicators(pe: ParsedEmail, auth: AuthResult) -> list[Indicator]:
     from_reg = registered_domain(from_dom)
 
     # Score visible header discrepancies. Authentication claims are report-only.
+    # Low weight: mailing lists and bulk-mail services use a separate bounce domain all the time.
     for n in auth.notes:
-        ind.append(Indicator("AUTH_NOTE", "Return-Path domain differs from From", "medium", n,
+        ind.append(Indicator("AUTH_NOTE", "Return-Path domain differs from From", "low", n,
                              "T1585 Establish Accounts"))
 
     # --- Display-name / identity spoofing ---
     disp = pe.from_display.lower()
-    brand_in_name = next((b for b in BRANDS if b in disp), None)
+    brand_in_name = next((b for b in BRANDS if _brand_in(disp, b)), None)
     if brand_in_name and registered_domain(from_dom) != BRANDS[brand_in_name]:
         ind.append(Indicator(
             "DISPLAY_SPOOF", "Display name impersonates a brand", "high",
@@ -127,8 +159,10 @@ def collect_indicators(pe: ParsedEmail, auth: AuthResult) -> list[Indicator]:
     if pe.reply_to_addr:
         rt = registered_domain(pe.domain_of(pe.reply_to_addr))
         if rt and from_reg and rt != from_reg:
+            # Mailing lists set Reply-To to the list, so only a free-webmail Reply-To scores high.
             ind.append(Indicator(
-                "REPLYTO_MISMATCH", "Reply-To redirects to a different domain", "medium",
+                "REPLYTO_MISMATCH", "Reply-To redirects to a different domain",
+                "medium" if rt in FREEMAIL else "low",
                 f"Replies would go to {rt}, not the sender domain {from_reg} - a common "
                 "way to collect victim replies out of band.",
                 "T1566 Phishing", evidence=pe.reply_to_addr))
@@ -152,6 +186,7 @@ def collect_indicators(pe: ParsedEmail, auth: AuthResult) -> list[Indicator]:
                 f'A link displayed as "{text}" actually points to {registered_domain(hh)}.',
                 "T1566.002 Spearphishing Link", evidence=href[:200]))
 
+    seen_hosting: set[str] = set()
     for u in pe.urls:
         host = url_host(u)
         reg = registered_domain(host)
@@ -174,19 +209,33 @@ def collect_indicators(pe: ParsedEmail, auth: AuthResult) -> list[Indicator]:
             ind.append(Indicator("URL_TLD", f"Link uses a high-abuse TLD (.{tld})", "low",
                                  f"{reg} - this TLD is disproportionately used for abuse.",
                                  "T1566.002 Spearphishing Link", evidence=u[:120]))
-        lk_u = _looks_like_brand(host)
+        lk_u = _looks_like_brand(host, include_labels=False)
         if lk_u:
             ind.append(Indicator("URL_LOOKALIKE", "Link domain imitates a brand", "critical",
                                  f"{reg} imitates {lk_u[0]} (real domain {lk_u[1]}).",
                                  "T1583.001 Domain Registration", evidence=u[:200]))
-        # brand name buried in a subdomain of an unrelated domain (paypal.com.secure-login.ru)
+        # brand name buried in a subdomain of an unrelated domain (paypal.com.secure-login.ru).
         for brand, official in BRANDS.items():
-            if brand in host and reg != official and not host.endswith(official):
+            if _brand_in(host, brand) and reg != official and not _is_official(host, official):
                 ind.append(Indicator("URL_SUBDOMAIN_BRAND", "Brand name buried in an unrelated domain",
                                      "high",
                                      f'"{brand}" appears in {host}, but the real domain is {reg}.',
                                      "T1566.002 Spearphishing Link", evidence=u[:200]))
                 break
+        ipfs = next((p for p in IPFS_HOSTS if _is_official(host, p)), None)
+        if ipfs and ipfs not in seen_hosting:
+            seen_hosting.add(ipfs)
+            ind.append(Indicator("URL_IPFS", "Link to an IPFS gateway", "high",
+                                 f"{host} serves files from IPFS, which phishing kits use because "
+                                 "pages there are hard to take down.",
+                                 "T1583.006 Web Services", evidence=u[:200]))
+        free = next((p for p in FREE_HOSTING if _is_official(host, p)), None)
+        if free and free not in seen_hosting:
+            seen_hosting.add(free)
+            ind.append(Indicator("URL_FREE_HOSTING", "Link to free developer hosting", "medium",
+                                 f"{host} is on {free}, a free hosting platform where anyone can "
+                                 "publish a page in minutes.",
+                                 "T1583.006 Web Services", evidence=u[:200]))
 
     # --- Attachments ---
     for att in pe.attachments:
@@ -207,6 +256,12 @@ def collect_indicators(pe: ParsedEmail, auth: AuthResult) -> list[Indicator]:
         elif ext in ARCHIVE_EXT:
             ind.append(Indicator("ATT_ARCHIVE", "Archive attachment", "medium",
                                  f"{att.filename} (.{ext}) can smuggle an executable past filters.",
+                                 "T1566.001 Spearphishing Attachment",
+                                 evidence=f"sha256={att.sha256}"))
+        elif ext in HTML_EXT or (name and att.content_type.lower() == "text/html"):
+            ind.append(Indicator("ATT_HTML", "HTML file attachment", "high",
+                                 f"{att.filename} opens as a local web page, a common way to deliver "
+                                 "a fake login form or smuggle a file past the mail filter.",
                                  "T1566.001 Spearphishing Attachment",
                                  evidence=f"sha256={att.sha256}"))
         if double:

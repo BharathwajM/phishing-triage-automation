@@ -8,10 +8,11 @@ from dataclasses import dataclass
 from .indicators import Indicator, SEVERITY_POINTS
 
 # Score bands -> verdict. A single critical indicator alone is enough to land
-# in MALICIOUS; the bands below are reached by accumulation otherwise.
+# in MALICIOUS, and a single high one (32 points) in SUSPICIOUS so an analyst
+# reviews it. Lower bands are reached by accumulation.
 VERDICT_BANDS = [
     (70, "MALICIOUS"),
-    (35, "SUSPICIOUS"),
+    (30, "SUSPICIOUS"),
     (1, "LIKELY BENIGN"),
     (0, "BENIGN"),
 ]

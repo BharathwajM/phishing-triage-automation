@@ -65,6 +65,50 @@ class TestDetectors(unittest.TestCase):
         v = verdict_for("invoice_macro.eml")
         self.assertIn("ATT_MACRO", {i.id for i in v.indicators})
 
+    def test_html_attachment_is_suspicious(self):
+        v = triage_text(
+            "From: billing@example.invalid\nSubject: Remittance\nMIME-Version: 1.0\n"
+            "Content-Type: text/html\n"
+            'Content-Disposition: attachment; filename="Remittance_0412.shtml"\n\n<html></html>')
+        self.assertIn("ATT_HTML", {i.id for i in v.indicators})
+        self.assertEqual(v.label, "SUSPICIOUS")
+
+    def test_ipfs_and_free_hosting_links(self):
+        v = triage_text(
+            "From: it@example.invalid\nSubject: Mailbox\n\n"
+            "Open https://ipfs.io/ipfs/bafybeexample/index.html and "
+            "https://login-portal.pages.dev/ and https://other.pages.dev/x")
+        ids = [i.id for i in v.indicators]
+        self.assertIn("URL_IPFS", ids)
+        self.assertEqual(ids.count("URL_FREE_HOSTING"), 1)  # one finding per platform
+
+    def test_short_brand_names_need_a_whole_word(self):
+        # "ups" in groups.google.com and "ato" in usatoday.com are not brand impersonation
+        v = triage_text(
+            "From: Groups Digest <digest@example.invalid>\nSubject: Digest\n\n"
+            "See https://groups.google.com/g/test and https://www.usatoday.com/story")
+        ids = {i.id for i in v.indicators}
+        self.assertFalse(ids & {"URL_SUBDOMAIN_BRAND", "URL_LOOKALIKE", "DISPLAY_SPOOF"})
+
+    def test_brand_buried_in_unrelated_domain_still_detected(self):
+        v = triage_text("From: a@example.invalid\nSubject: x\n\n"
+                        "https://ups.com.track-parcel.example.net/ and "
+                        "https://microsoftonline-verify.example.net/")
+        found = [i for i in v.indicators if i.id == "URL_SUBDOMAIN_BRAND"]
+        self.assertEqual(len(found), 2)
+
+    def test_mailing_list_headers_alone_are_not_flagged(self):
+        # Separate bounce domain and list Reply-To are normal for mailing lists
+        v = triage_text(
+            "From: Alice <alice@example.org>\nReturn-Path: <bounce-list@lists.example.net>\n"
+            "Reply-To: discuss@lists.example.net\nSubject: Re: meeting\n\nSee you there.")
+        self.assertIn(v.label, ("BENIGN", "LIKELY BENIGN"))
+
+
+def triage_text(message: str):
+    pe = parse_email(message.encode())
+    return score(collect_indicators(pe, analyze_auth(pe)))
+
 
 class TestUntrustedReports(unittest.TestCase):
     def test_authentication_claims_are_unverified_and_do_not_change_score(self):

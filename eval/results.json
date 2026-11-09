@@ -1,0 +1,258 @@
+{
+  "corpora": {
+    "phishing-2024": {
+      "class": "phishing",
+      "split": "dev",
+      "messages": 403,
+      "parse_errors": 0,
+      "labels": {
+        "MALICIOUS": 21,
+        "SUSPICIOUS": 138,
+        "LIKELY BENIGN": 139,
+        "BENIGN": 105
+      }
+    },
+    "phishing-2025": {
+      "class": "phishing",
+      "split": "test",
+      "messages": 481,
+      "parse_errors": 0,
+      "labels": {
+        "MALICIOUS": 22,
+        "SUSPICIOUS": 119,
+        "LIKELY BENIGN": 216,
+        "BENIGN": 124
+      }
+    },
+    "20030228_easy_ham.tar.bz2": {
+      "class": "legitimate",
+      "split": "dev",
+      "messages": 2500,
+      "parse_errors": 0,
+      "labels": {
+        "MALICIOUS": 1,
+        "SUSPICIOUS": 7,
+        "LIKELY BENIGN": 1652,
+        "BENIGN": 840
+      }
+    },
+    "20030228_hard_ham.tar.bz2": {
+      "class": "legitimate",
+      "split": "test",
+      "messages": 250,
+      "parse_errors": 0,
+      "labels": {
+        "MALICIOUS": 19,
+        "SUSPICIOUS": 20,
+        "LIKELY BENIGN": 76,
+        "BENIGN": 135
+      }
+    }
+  },
+  "summary": {
+    "all": {
+      "legitimate": {
+        "messages": 2750,
+        "flagged": 47,
+        "flagged_pct": 1.7,
+        "malicious": 20,
+        "indicator_share_pct": {
+          "AUTH_NOTE": 57.7,
+          "REPLYTO_MISMATCH": 18.5,
+          "LURE_CRED": 3.2,
+          "LURE_URGENCY": 2.7,
+          "URL_SUBDOMAIN_BRAND": 1.1,
+          "LURE_PAYMENT": 0.8,
+          "URL_SHORTENER": 0.2,
+          "URL_IP": 0.2,
+          "DISPLAY_SPOOF": 0.1,
+          "URL_TEXT_MISMATCH": 0.1,
+          "URL_TLD": 0.0,
+          "URL_LOOKALIKE": 0.0
+        },
+        "not_flagged": {
+          "count": 2703,
+          "no_url_no_attachment": 493,
+          "no_indicators": 975
+        },
+        "false_positive_indicators": {
+          "URL_SUBDOMAIN_BRAND": 30,
+          "REPLYTO_MISMATCH": 10,
+          "LURE_CRED": 9,
+          "AUTH_NOTE": 8,
+          "URL_IP": 5,
+          "LURE_URGENCY": 4,
+          "URL_SHORTENER": 3,
+          "LURE_PAYMENT": 2,
+          "DISPLAY_SPOOF": 2,
+          "URL_TEXT_MISMATCH": 2,
+          "URL_LOOKALIKE": 1
+        }
+      },
+      "phishing": {
+        "messages": 884,
+        "flagged": 300,
+        "flagged_pct": 33.9,
+        "malicious": 43,
+        "indicator_share_pct": {
+          "LURE_URGENCY": 25.5,
+          "LURE_PAYMENT": 18.1,
+          "LURE_CRED": 12.7,
+          "AUTH_NOTE": 12.2,
+          "REPLYTO_MISMATCH": 9.5,
+          "URL_SUBDOMAIN_BRAND": 8.9,
+          "URL_IPFS": 7.7,
+          "URL_FREE_HOSTING": 7.6,
+          "DISPLAY_SPOOF": 7.5,
+          "ATT_HTML": 5.4,
+          "URL_TLD": 2.7,
+          "URL_AT": 2.4,
+          "URL_SHORTENER": 2.1,
+          "LOOKALIKE_SENDER": 2.1,
+          "URL_TEXT_MISMATCH": 1.8,
+          "ATT_ARCHIVE": 0.8,
+          "ATT_DOUBLE_EXT": 0.2,
+          "URL_IP": 0.1,
+          "FREEMAIL_BRAND": 0.1
+        },
+        "not_flagged": {
+          "count": 584,
+          "no_url_no_attachment": 41,
+          "no_indicators": 229
+        }
+      }
+    },
+    "dev": {
+      "legitimate": {
+        "messages": 2500,
+        "flagged": 8,
+        "flagged_pct": 0.3,
+        "malicious": 1,
+        "indicator_share_pct": {
+          "AUTH_NOTE": 61.8,
+          "REPLYTO_MISMATCH": 19.6,
+          "LURE_CRED": 2.6,
+          "LURE_URGENCY": 2.4,
+          "LURE_PAYMENT": 0.6,
+          "URL_TLD": 0.0,
+          "URL_SHORTENER": 0.0,
+          "URL_IP": 0.0
+        },
+        "not_flagged": {
+          "count": 2492,
+          "no_url_no_attachment": 487,
+          "no_indicators": 840
+        },
+        "false_positive_indicators": {
+          "REPLYTO_MISMATCH": 7,
+          "AUTH_NOTE": 6,
+          "LURE_CRED": 6,
+          "LURE_PAYMENT": 1,
+          "URL_SHORTENER": 1,
+          "URL_IP": 1
+        }
+      },
+      "phishing": {
+        "messages": 403,
+        "flagged": 159,
+        "flagged_pct": 39.5,
+        "malicious": 21,
+        "indicator_share_pct": {
+          "LURE_URGENCY": 19.6,
+          "LURE_PAYMENT": 17.9,
+          "REPLYTO_MISMATCH": 13.6,
+          "LURE_CRED": 13.2,
+          "AUTH_NOTE": 10.4,
+          "DISPLAY_SPOOF": 9.4,
+          "URL_FREE_HOSTING": 9.2,
+          "URL_IPFS": 8.9,
+          "URL_SUBDOMAIN_BRAND": 8.2,
+          "ATT_HTML": 7.4,
+          "URL_TLD": 3.7,
+          "LOOKALIKE_SENDER": 3.2,
+          "URL_AT": 2.2,
+          "URL_TEXT_MISMATCH": 2.0,
+          "URL_SHORTENER": 2.0,
+          "ATT_ARCHIVE": 0.5,
+          "ATT_DOUBLE_EXT": 0.2,
+          "URL_IP": 0.2,
+          "FREEMAIL_BRAND": 0.2
+        },
+        "not_flagged": {
+          "count": 244,
+          "no_url_no_attachment": 9,
+          "no_indicators": 105
+        }
+      }
+    },
+    "test": {
+      "legitimate": {
+        "messages": 250,
+        "flagged": 39,
+        "flagged_pct": 15.6,
+        "malicious": 19,
+        "indicator_share_pct": {
+          "AUTH_NOTE": 17.6,
+          "URL_SUBDOMAIN_BRAND": 12.0,
+          "LURE_CRED": 8.8,
+          "REPLYTO_MISMATCH": 7.6,
+          "LURE_URGENCY": 6.0,
+          "LURE_PAYMENT": 2.4,
+          "URL_IP": 1.6,
+          "URL_SHORTENER": 1.6,
+          "DISPLAY_SPOOF": 0.8,
+          "URL_TEXT_MISMATCH": 0.8,
+          "URL_LOOKALIKE": 0.4
+        },
+        "not_flagged": {
+          "count": 211,
+          "no_url_no_attachment": 6,
+          "no_indicators": 135
+        },
+        "false_positive_indicators": {
+          "URL_SUBDOMAIN_BRAND": 30,
+          "LURE_URGENCY": 4,
+          "URL_IP": 4,
+          "LURE_CRED": 3,
+          "REPLYTO_MISMATCH": 3,
+          "DISPLAY_SPOOF": 2,
+          "URL_TEXT_MISMATCH": 2,
+          "AUTH_NOTE": 2,
+          "URL_SHORTENER": 2,
+          "LURE_PAYMENT": 1,
+          "URL_LOOKALIKE": 1
+        }
+      },
+      "phishing": {
+        "messages": 481,
+        "flagged": 141,
+        "flagged_pct": 29.3,
+        "malicious": 22,
+        "indicator_share_pct": {
+          "LURE_URGENCY": 30.4,
+          "LURE_PAYMENT": 18.3,
+          "AUTH_NOTE": 13.7,
+          "LURE_CRED": 12.3,
+          "URL_SUBDOMAIN_BRAND": 9.6,
+          "URL_IPFS": 6.7,
+          "URL_FREE_HOSTING": 6.2,
+          "REPLYTO_MISMATCH": 6.0,
+          "DISPLAY_SPOOF": 5.8,
+          "ATT_HTML": 3.7,
+          "URL_AT": 2.5,
+          "URL_SHORTENER": 2.3,
+          "URL_TLD": 1.9,
+          "URL_TEXT_MISMATCH": 1.7,
+          "LOOKALIKE_SENDER": 1.2,
+          "ATT_ARCHIVE": 1.0,
+          "ATT_DOUBLE_EXT": 0.2
+        },
+        "not_flagged": {
+          "count": 340,
+          "no_url_no_attachment": 32,
+          "no_indicators": 124
+        }
+      }
+    }
+  }
+}

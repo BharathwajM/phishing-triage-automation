@@ -10,13 +10,13 @@ Reported phishing is one of the most common tickets in a SOC queue. The tool han
 
 ```
 $ python -m phishtriage samples/
-[x] MALICIOUS      100/100  ato_refund_scam.eml  (5 indicators)
+[x] MALICIOUS       93/100  ato_refund_scam.eml  (4 indicators)
 [!] SUSPICIOUS      48/100  invoice_macro.eml  (3 indicators)
 [.] BENIGN           0/100  legit_github_notification.eml  (0 indicators)
 [.] BENIGN           0/100  legit_internal_hr.eml  (0 indicators)
 [x] MALICIOUS      100/100  microsoft365_password.eml  (5 indicators)
-[!] SUSPICIOUS      48/100  parcel_reschedule.eml  (3 indicators)
-[x] MALICIOUS      100/100  paypal_credphish.eml  (9 indicators)
+[!] SUSPICIOUS      36/100  parcel_reschedule.eml  (3 indicators)
+[x] MALICIOUS      100/100  paypal_credphish.eml  (8 indicators)
 
 7 triaged · 3 malicious · 2 suspicious · reports in reports/
 ```
@@ -34,10 +34,24 @@ The seven synthetic samples include two benign controls. The macro invoice is ma
 | **Look-alike domains** | typo-squats and **homoglyphs** (`paypa1-secure.com`, `0ffice365-login.com`) | T1583.001 |
 | **Reply-To redirection** | replies routed to a different domain to collect victims out of band | T1566 |
 | **Malicious links** | raw-IP URLs, `@` in the authority, URL shorteners, brand buried in an unrelated domain, high-abuse TLDs, **link text that lies about its destination** | T1566.002 |
-| **Dangerous attachments** | executables, macro-enabled Office docs, archives, **double extensions** (`invoice.pdf.exe`) | T1566.001 / T1036.007 |
+| **Phishing page hosting** | links to IPFS gateways and free developer hosting (`*.pages.dev`, `*.r2.dev`, `*.vercel.app`) | T1583.006 |
+| **Dangerous attachments** | executables, macro-enabled Office docs, archives, **HTML attachments** (fake login pages, HTML smuggling), **double extensions** (`invoice.pdf.exe`) | T1566.001 / T1036.007 |
 | **Social-engineering lures** | urgency/threat language, credential-harvest asks, payment/refund pretexts | T1566 |
 
-Each finding carries a severity; the score sums them (a single critical finding alone is enough for MALICIOUS). The report lists every finding and its weight, so you can see **why** a verdict was reached.
+Each finding carries a severity and the score sums them. One critical finding is enough for MALICIOUS, and one high finding is enough for SUSPICIOUS. The report lists every finding and its weight, so you can see **why** a verdict was reached.
+
+## Accuracy on public email corpora
+
+The bundled samples are synthetic, so I also measured the tool on real email: 884 phishing messages from 2024 and 2025 and 2,750 legitimate messages. I tuned the rules on a development set, then ran a held-out test set once.
+
+| Set | Phishing flagged | Legitimate flagged (false alarms) |
+|---|---|---|
+| Dev, before changes | 22.6% (91 of 403) | 18.2% (455 of 2,500) |
+| Dev, after changes | **39.5%** (159 of 403) | **0.3%** (8 of 2,500) |
+| Test, before changes | 19.1% (92 of 481) | 20.4% (51 of 250) |
+| Test, after changes | **29.3%** (141 of 481) | **15.6%** (39 of 250) |
+
+"Flagged" means a SUSPICIOUS or MALICIOUS verdict. The test set's legitimate mail is the harder half of the corpus, and most of its false alarms came from one rule: newsletters and vendors with a brand word in their own domain, such as an Apple newsletter on `applecore.lockergnome.com`. The tool still misses most phishing that has no link, attachment or sender tell to score, so it is a first-pass triage aid and not a filter. Method, data sources and limitations are in [`eval/`](eval/README.md).
 
 ## Usage
 
@@ -84,7 +98,7 @@ phishtriage/
 python -m unittest discover -s tests -v
 ```
 
-Tests cover sample verdicts, forged authentication claims, email markup in reports, and the CLI's offline default with API keys present.
+Tests cover sample verdicts, the newer detectors, the false-positive fixes from the accuracy test, forged authentication claims, email markup in reports, and the CLI's offline default with API keys present.
 
 ---
 

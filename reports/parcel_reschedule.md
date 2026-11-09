@@ -1,9 +1,9 @@
 # Phishing Triage Report - SUSPICIOUS
-*Generated 2026-11-09 00:54 UTC by phishtriage*
+*Generated 2026-11-09 15:10 UTC by phishtriage*
 
-**Verdict:** SUSPICIOUS  |  **Risk score:** 48/100
+**Verdict:** SUSPICIOUS  |  **Risk score:** 36/100
 
-3 indicator(s) (2 medium, 1 low); risk score 48/100 -> SUSPICIOUS.
+3 indicator(s) (1 medium, 2 low); risk score 36/100 -> SUSPICIOUS.
 
 ## Email
 - **From:** ` Parcel Delivery <notice@deliveries-notice.com> `
@@ -19,8 +19,8 @@
 ## Indicators
 | Severity | Finding | ATT&CK | Detail |
 |---|---|---|---|
-| MEDIUM | Reply-To redirects to a different domain | T1566 Phishing | ` Replies would go to parcel-support-team.net, not the sender domain deliveries-notice.com - a common way to collect victim replies out of band. ` |
 | MEDIUM | URL shortener hides the destination | T1566.002 Spearphishing Link | ` bit.ly - the true landing page is concealed until clicked. ` |
+| LOW | Reply-To redirects to a different domain | T1566 Phishing | ` Replies would go to parcel-support-team.net, not the sender domain deliveries-notice.com - a common way to collect victim replies out of band. ` |
 | LOW | Urgency / threat language | T1566 Phishing | ` Pressure to act fast is a core social-engineering tactic. ` |
 
 ## Indicators of Compromise (defanged)
