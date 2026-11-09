@@ -30,7 +30,7 @@ The seven synthetic samples include two benign controls. The macro invoice is ma
 | Category | Examples of what it catches | ATT&CK |
 |---|---|---|
 | **Sender headers** | Return-Path domain differs from From; reported SPF, DKIM, and DMARC results shown separately | T1566 |
-| **Identity spoofing** | display name impersonates a brand; a brand "sent" from free webmail | T1656 Impersonation |
+| **Identity spoofing** | display name impersonates a brand, including names disguised with look-alike Unicode letters (`Chаse` with a Cyrillic `а`); a brand "sent" from free webmail | T1656 Impersonation |
 | **Look-alike domains** | typo-squats and **homoglyphs** (`paypa1-secure.com`, `0ffice365-login.com`) | T1583.001 |
 | **Reply-To redirection** | replies routed to a different domain to collect victims out of band | T1566 |
 | **Malicious links** | raw-IP URLs, `@` in the authority, URL shorteners, brand buried in an unrelated domain, high-abuse TLDs, **link text that lies about its destination** | T1566.002 |
@@ -47,7 +47,7 @@ The bundled samples are synthetic, so I also measured the tool on real email: 88
 | Set | Phishing flagged | Legitimate flagged (false alarms) |
 |---|---|---|
 | Dev, before changes | 22.6% (91 of 403) | 18.2% (455 of 2,500) |
-| Dev, after changes | **39.5%** (159 of 403) | **0.3%** (8 of 2,500) |
+| Dev, after changes | **41.9%** (169 of 403) | **0.3%** (8 of 2,500) |
 | Test, before changes | 19.1% (92 of 481) | 20.4% (51 of 250) |
 | Test, after changes | **29.3%** (141 of 481) | **15.6%** (39 of 250) |
 

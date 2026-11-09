@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import difflib
 import re
+import unicodedata
 from dataclasses import dataclass
 
 from .auth import AuthResult
@@ -72,6 +73,22 @@ _PAYMENT = re.compile(r"\b(invoice|payment|wire transfer|bank details|gift card|
 # Characters attackers swap in to fake a brand name while staying registrable.
 _HOMOGLYPHS = str.maketrans({"0": "o", "1": "l", "3": "e", "4": "a", "5": "s",
                              "7": "t", "9": "g", "$": "s", "@": "a"})
+
+
+# Cyrillic and Greek letters that look like Latin ones ("Chаse" with a Cyrillic "а").
+_CONFUSABLES = str.maketrans({
+    "а": "a", "в": "b", "с": "c", "ԁ": "d", "е": "e", "һ": "h", "і": "i", "ј": "j", "к": "k",
+    "ӏ": "l", "м": "m", "н": "h", "о": "o", "р": "p", "ԛ": "q", "ѕ": "s", "т": "t", "υ": "u",
+    "ѵ": "v", "ԝ": "w", "х": "x", "у": "y", "α": "a", "β": "b", "ε": "e", "ι": "i", "κ": "k",
+    "ν": "v", "ο": "o", "ρ": "p", "τ": "t", "χ": "x", "γ": "y",
+})
+# Invisible characters inserted to break up a brand name ("Pay​Pal").
+_INVISIBLE = dict.fromkeys(map(ord, "­͏​‌‍⁠﻿"))
+
+
+def _fold_lookalikes(text: str) -> str:
+    """Map full-width forms, look-alike letters and invisible characters to plain Latin text."""
+    return unicodedata.normalize("NFKC", text).translate(_INVISIBLE).lower().translate(_CONFUSABLES)
 
 
 def _normalize(token: str) -> str:
@@ -140,8 +157,18 @@ def collect_indicators(pe: ParsedEmail, auth: AuthResult) -> list[Indicator]:
                              "T1585 Establish Accounts"))
 
     # --- Display-name / identity spoofing ---
-    disp = pe.from_display.lower()
-    brand_in_name = next((b for b in BRANDS if _brand_in(disp, b)), None)
+    # Check every brand in the name, not just the first: "Chase Bank (via Google Drive)" is sent
+    # by google.com, so Google is genuine there but Chase is not.
+    named = [b for b in BRANDS if _brand_in(_fold_lookalikes(pe.from_display), b)]
+    disguised = next((b for b in named if not _brand_in(pe.from_display.lower(), b)), None)
+    if disguised:
+        # The brand only appears once look-alike letters are folded: a deliberate disguise.
+        ind.append(Indicator(
+            "DISPLAY_HOMOGLYPH", "Brand name in the display name uses look-alike characters", "high",
+            f'"{pe.from_display}" spells {disguised} with look-alike or invisible characters, '
+            "which no real company does.",
+            "T1656 Impersonation", evidence=pe.from_display.encode("unicode_escape").decode("ascii")[:200]))
+    brand_in_name = next((b for b in named if from_reg != BRANDS[b]), None)
     if brand_in_name and registered_domain(from_dom) != BRANDS[brand_in_name]:
         ind.append(Indicator(
             "DISPLAY_SPOOF", "Display name impersonates a brand", "high",

@@ -27,7 +27,7 @@ A message counts as **flagged** if the verdict is SUSPICIOUS or MALICIOUS.
 | Set | Phishing flagged | Legitimate flagged (false alarms) |
 |---|---|---|
 | Dev, before | 22.6% (91 of 403) | 18.2% (455 of 2,500) |
-| Dev, after | **39.5%** (159 of 403) | **0.3%** (8 of 2,500) |
+| Dev, after | **41.9%** (169 of 403) | **0.3%** (8 of 2,500) |
 | Test, before | 19.1% (92 of 481) | 20.4% (51 of 250) |
 | Test, after | **29.3%** (141 of 481) | **15.6%** (39 of 250) |
 
@@ -50,14 +50,21 @@ A message counts as **flagged** if the verdict is SUSPICIOUS or MALICIOUS.
 
 **Threshold.** After those changes, the largest group of dev misses scored exactly 32, which is one high-severity finding on its own. The SUSPICIOUS line was 35, so one high finding could never reach it. I lowered the line to 30, so that one high finding is enough to send a message to an analyst. On the dev set this added 45 phishing detections and 1 false alarm.
 
+**Encoded and disguised sender names.** While writing this up I found that sender names were checked in their raw encoded form (`=?UTF-8?Q?Ch=D0=B0se_B=D0=B0nk...`), so the brand check never saw them. Decoding them showed a pattern: dev phishing sent through Google Drive and DocuSign's own sharing features, with names like "Chаse Bаnk (via Google Drive)" where the "а" is Cyrillic.
+- Names and subjects are now decoded.
+- Look-alike Cyrillic and Greek letters, full-width letters and invisible characters are mapped to plain Latin before the brand check.
+- A brand that only appears after that mapping is a new high-severity finding.
+- Every brand in the name is checked, not just the first. In "Chase Bank (via Google Drive)" sent from google.com, Google is genuine but Chase is not.
+
+This took the dev set from 39.5% to 41.9% with no new false alarms. Some of these names still get through, such as "WeIIsFargo" spelled with a capital I instead of an l, and "Bank of America" written with spaces.
+
 ## Limitations
 
 - **Test-set false alarms.** On the test set, 30 of the 39 false alarms were caused by the brand-in-domain check. They came from legitimate senders with a brand word in their own domain: an Apple newsletter (`applecore.lockergnome.com`), an Outlook add-in vendor (`outlook.4team.biz`) and `outlooksecure.com`. I have not changed the rule after seeing this, because that would make the test set no longer held out. An allow-list of known senders would be the usual fix in a real deployment.
 - **The legitimate mail is from 2002 and 2003.** It has almost no HTML marketing mail, link tracking or modern bulk-mail services, so the false-alarm rate on a 2026 inbox would be different. I could not find a public corpus of recent legitimate business email with a licence that allows this kind of use.
 - **Many phishing emails give the rules nothing to score.** Of the 340 test phishing messages that were not flagged, 124 matched no rule at all. These are usually short lures with an ordinary-looking link, or text-only scams. Catching them needs URL reputation (the `--enrich` option, not used here) or a content model.
 - **The test set is not perfectly blind.** My first look at misses and false alarms, before I set up the split, covered all four corpora together. Every rule change above is backed by dev-set examples. I also took out two hosting domains (`sslip.io`, `nip.io`) that I had noticed in that first look but that do not appear in the dev set. Even so, I had already seen some of the test data.
-- **Encoded display names are not decoded.** A sender name like `=?utf-8?q?Ch=D0=B0se Bank` (Chase, written with a Cyrillic "а") is checked in its encoded form, so the brand check can miss it. I found this while checking this write-up and have not fixed it yet.
-- **More MALICIOUS verdicts became SUSPICIOUS.** Removing the double-counted brand finding means fewer messages reach MALICIOUS on their own (2024 phishing went from 28 to 21). They are still flagged for an analyst.
+- **The test set has been run twice.** The second run was after the encoded-name fix described above, which came from dev-set examples. The test numbers did not change.
 
 ## Reproduce
 

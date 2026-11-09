@@ -7,6 +7,8 @@ import email
 import hashlib
 import re
 from dataclasses import dataclass, field
+from email.errors import HeaderParseError
+from email.header import decode_header, make_header
 from email.message import Message
 from email.utils import parseaddr, getaddresses
 from html.parser import HTMLParser
@@ -89,6 +91,14 @@ def _decode(part: Message) -> str:
         return payload.decode("utf-8", errors="replace")
 
 
+def _decode_words(value: str) -> str:
+    """Decode RFC 2047 encoded words (=?utf-8?q?...?=) so checks see the text a mail client shows."""
+    try:
+        return str(make_header(decode_header(value)))
+    except (HeaderParseError, LookupError, UnicodeDecodeError, ValueError):
+        return value
+
+
 def parse_email(raw: bytes) -> ParsedEmail:
     msg = email.message_from_bytes(raw)
 
@@ -97,6 +107,7 @@ def parse_email(raw: bytes) -> ParsedEmail:
     headers = {h: msg.get(h, "") for h in want}
 
     from_display, from_addr = parseaddr(msg.get("From", ""))
+    from_display = _decode_words(from_display)
     _, reply_to_addr = parseaddr(msg.get("Reply-To", ""))
     _, return_path_addr = parseaddr(msg.get("Return-Path", ""))
     to_addrs = [a for _, a in getaddresses(msg.get_all("To", []))]
@@ -143,7 +154,7 @@ def parse_email(raw: bytes) -> ParsedEmail:
 
     pe = ParsedEmail(
         headers=headers,
-        subject=msg.get("Subject", ""),
+        subject=_decode_words(str(msg.get("Subject", ""))),
         date=msg.get("Date", ""),
         message_id=msg.get("Message-ID", ""),
         from_display=from_display,

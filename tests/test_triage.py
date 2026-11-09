@@ -97,6 +97,34 @@ class TestDetectors(unittest.TestCase):
         found = [i for i in v.indicators if i.id == "URL_SUBDOMAIN_BRAND"]
         self.assertEqual(len(found), 2)
 
+    def test_encoded_display_name_is_decoded(self):
+        pe = parse_email(b"From: =?utf-8?b?w4lsb2RpZSBNYXJ0aW4=?= <e@example.org>\n"
+                         b"Subject: =?utf-8?q?Konto_gesperrt?=\n\nHallo")
+        self.assertEqual(pe.from_display, "Élodie Martin")
+        self.assertEqual(pe.subject, "Konto gesperrt")
+
+    def test_lookalike_characters_in_display_name(self):
+        # Cyrillic "a", a zero-width space and full-width letters, each hiding a brand name
+        for header in ("=?utf-8?q?Ch=D0=B0se_Bank?=", "=?utf-8?q?Pay=E2=80=8BPal?=",
+                       "=?utf-8?q?=EF=BC=B0ay=EF=BD=90al?="):
+            with self.subTest(header=header):
+                v = triage_text(f"From: {header} <alerts@example.invalid>\nSubject: x\n\nhi")
+                ids = {i.id for i in v.indicators}
+                self.assertIn("DISPLAY_HOMOGLYPH", ids)
+                self.assertIn("DISPLAY_SPOOF", ids)
+
+    def test_brand_shared_through_a_real_service(self):
+        # Sent by Google Drive's sharing feature: Google is genuine, the Chase name is not
+        shared = "From: =?utf-8?q?Ch=D0=B0se_Bank_=28via_Google_Drive=29?= <drive-shares-dm-noreply@google.com>\n"
+        ids = {i.id for i in triage_text(shared + "Subject: x\n\nhi").indicators}
+        self.assertTrue({"DISPLAY_HOMOGLYPH", "DISPLAY_SPOOF"} <= ids)
+        plain = "From: Alex (via Google Drive) <drive-shares-dm-noreply@google.com>\nSubject: x\n\nhi"
+        self.assertEqual(triage_text(plain).label, "BENIGN")
+
+    def test_plain_brand_name_is_not_a_homoglyph(self):
+        v = triage_text("From: PayPal <service@paypal.com>\nSubject: Receipt\n\nThanks")
+        self.assertEqual(v.label, "BENIGN")
+
     def test_mailing_list_headers_alone_are_not_flagged(self):
         # Separate bounce domain and list Reply-To are normal for mailing lists
         v = triage_text(

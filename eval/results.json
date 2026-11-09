@@ -6,10 +6,10 @@
       "messages": 403,
       "parse_errors": 0,
       "labels": {
-        "MALICIOUS": 21,
-        "SUSPICIOUS": 138,
-        "LIKELY BENIGN": 139,
-        "BENIGN": 105
+        "MALICIOUS": 28,
+        "SUSPICIOUS": 141,
+        "LIKELY BENIGN": 130,
+        "BENIGN": 104
       }
     },
     "phishing-2025": {
@@ -91,34 +91,35 @@
       },
       "phishing": {
         "messages": 884,
-        "flagged": 300,
-        "flagged_pct": 33.9,
-        "malicious": 43,
+        "flagged": 310,
+        "flagged_pct": 35.1,
+        "malicious": 50,
         "indicator_share_pct": {
           "LURE_URGENCY": 25.5,
           "LURE_PAYMENT": 18.1,
           "LURE_CRED": 12.7,
           "AUTH_NOTE": 12.2,
+          "DISPLAY_SPOOF": 10.0,
           "REPLYTO_MISMATCH": 9.5,
           "URL_SUBDOMAIN_BRAND": 8.9,
           "URL_IPFS": 7.7,
           "URL_FREE_HOSTING": 7.6,
-          "DISPLAY_SPOOF": 7.5,
           "ATT_HTML": 5.4,
           "URL_TLD": 2.7,
           "URL_AT": 2.4,
           "URL_SHORTENER": 2.1,
           "LOOKALIKE_SENDER": 2.1,
           "URL_TEXT_MISMATCH": 1.8,
+          "DISPLAY_HOMOGLYPH": 0.9,
           "ATT_ARCHIVE": 0.8,
           "ATT_DOUBLE_EXT": 0.2,
           "URL_IP": 0.1,
           "FREEMAIL_BRAND": 0.1
         },
         "not_flagged": {
-          "count": 584,
+          "count": 574,
           "no_url_no_attachment": 41,
-          "no_indicators": 229
+          "no_indicators": 228
         }
       }
     },
@@ -154,16 +155,16 @@
       },
       "phishing": {
         "messages": 403,
-        "flagged": 159,
-        "flagged_pct": 39.5,
-        "malicious": 21,
+        "flagged": 169,
+        "flagged_pct": 41.9,
+        "malicious": 28,
         "indicator_share_pct": {
           "LURE_URGENCY": 19.6,
           "LURE_PAYMENT": 17.9,
+          "DISPLAY_SPOOF": 14.6,
           "REPLYTO_MISMATCH": 13.6,
           "LURE_CRED": 13.2,
           "AUTH_NOTE": 10.4,
-          "DISPLAY_SPOOF": 9.4,
           "URL_FREE_HOSTING": 9.2,
           "URL_IPFS": 8.9,
           "URL_SUBDOMAIN_BRAND": 8.2,
@@ -171,6 +172,7 @@
           "URL_TLD": 3.7,
           "LOOKALIKE_SENDER": 3.2,
           "URL_AT": 2.2,
+          "DISPLAY_HOMOGLYPH": 2.0,
           "URL_TEXT_MISMATCH": 2.0,
           "URL_SHORTENER": 2.0,
           "ATT_ARCHIVE": 0.5,
@@ -179,9 +181,9 @@
           "FREEMAIL_BRAND": 0.2
         },
         "not_flagged": {
-          "count": 244,
+          "count": 234,
           "no_url_no_attachment": 9,
-          "no_indicators": 105
+          "no_indicators": 104
         }
       }
     },
@@ -236,8 +238,8 @@
           "URL_SUBDOMAIN_BRAND": 9.6,
           "URL_IPFS": 6.7,
           "URL_FREE_HOSTING": 6.2,
+          "DISPLAY_SPOOF": 6.0,
           "REPLYTO_MISMATCH": 6.0,
-          "DISPLAY_SPOOF": 5.8,
           "ATT_HTML": 3.7,
           "URL_AT": 2.5,
           "URL_SHORTENER": 2.3,
