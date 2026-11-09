@@ -88,4 +88,4 @@ Tests cover sample verdicts, forged authentication claims, email markup in repor
 
 ---
 
-*Part of my security portfolio, alongside an [AD attack & detection lab](https://github.com/BharathwajM/ad-attack-detection-lab), a [SOC monitoring lab](https://github.com/BharathwajM/soc-portfolio-lab) and an [Essential Eight hardening lab](https://github.com/BharathwajM/essential-eight-lab). All sample emails are synthetic; no real malware or live payloads are included.*
+*Part of my security portfolio. See also: [SOC monitoring lab (Sentinel)](https://github.com/BharathwajM/soc-portfolio-lab) · [AD attack & detection lab (Splunk)](https://github.com/BharathwajM/ad-attack-detection-lab) · [Essential Eight hardening lab (PowerShell)](https://github.com/BharathwajM/essential-eight-lab). All sample emails are synthetic; no real malware or live payloads are included.*
