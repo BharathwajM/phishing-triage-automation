@@ -102,4 +102,4 @@ Tests cover sample verdicts, the newer detectors, the false-positive fixes from 
 
 ---
 
-*Part of my security portfolio. See also: [SOC monitoring lab (Sentinel)](https://github.com/BharathwajM/soc-portfolio-lab) · [AD attack & detection lab (Splunk)](https://github.com/BharathwajM/ad-attack-detection-lab) · [Essential Eight hardening lab (PowerShell)](https://github.com/BharathwajM/essential-eight-lab). All sample emails are synthetic; no real malware or live payloads are included.*
+*Part of my security portfolio. See also: [Splunk BOTS v3 breach investigation](https://github.com/BharathwajM/splunk-bots-v3-investigation) · [SOC monitoring lab (Sentinel)](https://github.com/BharathwajM/soc-portfolio-lab) · [AD attack & detection lab (Splunk)](https://github.com/BharathwajM/ad-attack-detection-lab) · [Essential Eight hardening lab (PowerShell)](https://github.com/BharathwajM/essential-eight-lab). All sample emails are synthetic; no real malware or live payloads are included.*
