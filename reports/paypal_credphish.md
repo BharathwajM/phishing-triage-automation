@@ -1,5 +1,5 @@
 # Phishing Triage Report - MALICIOUS
-*Generated 2026-11-09 15:10 UTC by phishtriage*
+*Generated 2026-11-20 08:32 UTC by phishtriage*
 
 **Verdict:** MALICIOUS  |  **Risk score:** 100/100
 
@@ -19,8 +19,8 @@
 ## Indicators
 | Severity | Finding | ATT&CK | Detail |
 |---|---|---|---|
-| CRITICAL | Sender domain looks like a known brand | T1583.001 Domain Registration | ` Sending domain paypa1-secure.com imitates paypal (real domain paypal.com). ` |
-| HIGH | Display name impersonates a brand | T1656 Impersonation | ` From shows "PayPal Service" but the real sending domain is paypa1-secure.com, not paypal.com. ` |
+| CRITICAL | Sender domain looks like a known brand | T1583.001 Domains | ` Sending domain paypa1-secure.com imitates paypal (real domain paypal.com). ` |
+| HIGH | Display name impersonates a brand | T1684.001 Impersonation | ` From shows "PayPal Service" but the real sending domain is paypa1-secure.com, not paypal.com. ` |
 | HIGH | Link text hides its real destination | T1566.002 Spearphishing Link | ` A link displayed as "https://www.paypal.com/signin" actually points to 198.51.100.23. ` |
 | HIGH | Brand name buried in an unrelated domain | T1566.002 Spearphishing Link | ` "paypal" appears in account-paypal.verify-id.ru, but the real domain is verify-id.ru. ` |
 | HIGH | Link points to a raw IP address | T1566.002 Spearphishing Link | ` 198.51.100.23 - legitimate brands use named domains, not bare IPs. ` |
@@ -44,4 +44,4 @@ _Live enrichment is off. Use --enrich to opt in._
 - Search mail logs for other recipients; pull the message org-wide.
 - If links/attachments were opened, isolate the host and begin IR.
 
-**MITRE ATT&CK:** T1656 Impersonation, T1566 Phishing, T1583.001 Domain Registration, T1566.002 Spearphishing Link
+**MITRE ATT&CK:** T1684.001 Impersonation, T1566 Phishing, T1583.001 Domains, T1566.002 Spearphishing Link

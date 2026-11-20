@@ -30,7 +30,7 @@ The seven synthetic samples include two benign controls. The macro invoice is ma
 | Category | Examples of what it catches | ATT&CK |
 |---|---|---|
 | **Sender headers** | Return-Path domain differs from From; reported SPF, DKIM, and DMARC results shown separately | T1566 |
-| **Identity spoofing** | display name impersonates a brand, including names disguised with look-alike Unicode letters (`Chаse` with a Cyrillic `а`); a brand "sent" from free webmail | T1656 Impersonation |
+| **Identity spoofing** | display name impersonates a brand, including names disguised with look-alike Unicode letters (`Chаse` with a Cyrillic `а`); a brand "sent" from free webmail | T1684.001 Impersonation |
 | **Look-alike domains** | typo-squats and **homoglyphs** (`paypa1-secure.com`, `0ffice365-login.com`) | T1583.001 |
 | **Reply-To redirection** | replies routed to a different domain to collect victims out of band | T1566 |
 | **Malicious links** | raw-IP URLs, `@` in the authority, URL shorteners, brand buried in an unrelated domain, high-abuse TLDs, **link text that lies about its destination** | T1566.002 |

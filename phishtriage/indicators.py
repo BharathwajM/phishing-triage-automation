@@ -167,20 +167,20 @@ def collect_indicators(pe: ParsedEmail, auth: AuthResult) -> list[Indicator]:
             "DISPLAY_HOMOGLYPH", "Brand name in the display name uses look-alike characters", "high",
             f'"{pe.from_display}" spells {disguised} with look-alike or invisible characters, '
             "which no real company does.",
-            "T1656 Impersonation", evidence=pe.from_display.encode("unicode_escape").decode("ascii")[:200]))
+            "T1684.001 Impersonation", evidence=pe.from_display.encode("unicode_escape").decode("ascii")[:200]))
     brand_in_name = next((b for b in named if from_reg != BRANDS[b]), None)
     if brand_in_name and registered_domain(from_dom) != BRANDS[brand_in_name]:
         ind.append(Indicator(
             "DISPLAY_SPOOF", "Display name impersonates a brand", "high",
             f'From shows "{pe.from_display}" but the real sending domain is '
             f'{from_reg or "(none)"}, not {BRANDS[brand_in_name]}.',
-            "T1656 Impersonation", evidence=pe.headers.get("From", "")))
+            "T1684.001 Impersonation", evidence=pe.headers.get("From", "")))
     if from_reg in FREEMAIL and pe.from_display and brand_in_name:
         ind.append(Indicator(
             "FREEMAIL_BRAND", "Brand sent from a free webmail account", "high",
             f"A message claiming to be {brand_in_name} was sent from a personal "
             f"{from_reg} address - brands do not send from free webmail.",
-            "T1656 Impersonation"))
+            "T1684.001 Impersonation"))
 
     # --- Reply-To / Return-Path redirection ---
     if pe.reply_to_addr:
@@ -200,7 +200,7 @@ def collect_indicators(pe: ParsedEmail, auth: AuthResult) -> list[Indicator]:
         ind.append(Indicator(
             "LOOKALIKE_SENDER", "Sender domain looks like a known brand", "critical",
             f"Sending domain {from_reg} imitates {lk[0]} (real domain {lk[1]}).",
-            "T1583.001 Domain Registration", evidence=from_dom))
+            "T1583.001 Domains", evidence=from_dom))
 
     # --- URL analysis ---
     html_links = getattr(pe, "html_links", [])
@@ -240,7 +240,7 @@ def collect_indicators(pe: ParsedEmail, auth: AuthResult) -> list[Indicator]:
         if lk_u:
             ind.append(Indicator("URL_LOOKALIKE", "Link domain imitates a brand", "critical",
                                  f"{reg} imitates {lk_u[0]} (real domain {lk_u[1]}).",
-                                 "T1583.001 Domain Registration", evidence=u[:200]))
+                                 "T1583.001 Domains", evidence=u[:200]))
         # brand name buried in a subdomain of an unrelated domain (paypal.com.secure-login.ru).
         for brand, official in BRANDS.items():
             if _brand_in(host, brand) and reg != official and not _is_official(host, official):
